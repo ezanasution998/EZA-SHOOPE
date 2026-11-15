@@ -3,57 +3,32 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI Affiliate Product Analyst Shopee</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
-  margin: 0;
-  padding: 20px;
-}
-.container {
-  max-width: 750px;
-  margin: auto;
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-}
-h1 { color: #ee4d2d; }
-input {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0 15px;
-  box-sizing: border-box;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-}
-button {
-  background: #ee4d2d;
-  color: white;
-  padding: 13px;
-  border: none;
-  border-radius: 6px;
-  width: 100%;
-  cursor: pointer;
-  font-size: 16px;
-}
-#hasil {
-  margin-top: 20px;
-  padding: 15px;
-  background: #fff3ef;
-  border-radius: 8px;
-  display: none;
-}
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f4f5f8;margin:0;padding:20px;color:#222}
+.container{max-width:850px;margin:auto;background:white;padding:25px;border-radius:14px}
+h1{color:#ee4d2d;font-size:27px}
+h2{font-size:19px;margin-top:25px}
+p{color:#666;line-height:1.5}
+label{display:block;margin-top:15px;font-weight:bold}
+input{width:100%;padding:13px;margin-top:7px;border:1px solid #ddd;border-radius:7px;font-size:15px}
+button{width:100%;padding:14px;background:#ee4d2d;color:white;border:0;border-radius:7px;margin-top:20px;font-size:16px;cursor:pointer}
+.result{background:#fff5f1;padding:17px;border-radius:9px;margin-top:20px;display:none}
+.metric{background:#f5f6fa;padding:13px;border-radius:8px;margin-top:10px}
+small{color:#777}
 </style>
 </head>
 <body>
 <div class="container">
 <h1>AI Affiliate Product Analyst</h1>
-<p>Analisis peluang produk Shopee Affiliate Anda.</p>
+<p>Shopee Edition – Alat analisis peluang produk affiliate.</p>
+
+<h2>Analisis Produk</h2>
 
 <label>Nama Produk</label>
-<input id="produk" placeholder="Masukkan nama produk">
+<input id="nama" placeholder="Masukkan nama produk">
 
 <label>Harga Produk (Rp)</label>
 <input id="harga" type="number" placeholder="Contoh: 100000">
@@ -65,43 +40,49 @@ button {
 <input id="klik" type="number" placeholder="Contoh: 500">
 
 <label>Jumlah Penjualan</label>
-<input id="penjualan" type="number" placeholder="Contoh: 25">
+<input id="jual" type="number" placeholder="Contoh: 25">
 
 <button onclick="analisis()">ANALISIS PRODUK</button>
 
-<div id="hasil"></div>
+<div class="result" id="hasil">
+<h2>Hasil Analisis</h2>
+<div id="detail"></div>
+</div>
+
+<h2>Catatan Penggunaan</h2>
+<p>Masukkan data produk berdasarkan informasi yang Anda peroleh dari Shopee Affiliate. Hasil perhitungan merupakan estimasi berdasarkan data masukan, bukan data langsung dari Shopee.</p>
 </div>
 
 <script>
-function analisis() {
-  const produk = document.getElementById("produk").value;
-  const harga = Number(document.getElementById("harga").value);
-  const komisi = Number(document.getElementById("komisi").value);
-  const klik = Number(document.getElementById("klik").value);
-  const penjualan = Number(document.getElementById("penjualan").value);
+function analisis(){
+const nama=document.getElementById('nama').value.trim();
+const harga=Number(document.getElementById('harga').value);
+const komisi=Number(document.getElementById('komisi').value);
+const klik=Number(document.getElementById('klik').value);
+const jual=Number(document.getElementById('jual').value);
 
-  if (!produk || harga <= 0 || komisi < 0 ||
-      komisi > 100 || klik <= 0 || penjualan < 0) {
-    alert("Mohon isi data dengan benar.");
-    return;
-  }
+if(!nama||harga<=0||komisi<0||komisi>100||klik<=0||jual<0||jual>klik){
+alert('Periksa kembali semua data. Pastikan jumlah penjualan tidak melebihi jumlah klik.');
+return;
+}
 
-  const konversi = penjualan / klik * 100;
-  const pendapatan = harga * komisi / 100 * penjualan;
+const pendapatan=harga*jual*komisi/100;
+const konversi=jual/klik*100;
 
-  document.getElementById("hasil").style.display = "block";
-  document.getElementById("hasil").innerHTML = `
-    <h3>Hasil Analisis Produk</h3>
-    <p><b>Produk:</b> ${produk.replace(/[&<>"']/g, "")}</p>
-    <p><b>Tingkat Konversi:</b> ${konversi.toFixed(2)}%</p>
-    <p><b>Estimasi Komisi:</b> Rp ${pendapatan.toLocaleString("id-ID")}</p>
-    <p><b>Kesimpulan:</b> ${
-      konversi >= 5 ? "Performa penjualan cukup baik."
-      : konversi >= 2 ? "Performa perlu ditingkatkan."
-      : "Perlu evaluasi strategi promosi."
-    }</p>
-    <small>Perhitungan estimasi berdasarkan data yang dimasukkan, bukan data langsung Shopee.</small>
-  `;
+let status='Perlu pengamatan lebih lanjut';
+if(konversi>=5) status='Potensial berdasarkan data yang dimasukkan';
+else if(konversi>=2) status='Cukup menarik untuk dipantau';
+else if(konversi<2) status='Perlu evaluasi';
+
+document.getElementById('detail').innerHTML=`
+<div class="metric"><b>Produk:</b> ${nama}</div>
+<div class="metric"><b>Estimasi komisi:</b> Rp ${pendapatan.toLocaleString('id-ID')}</div>
+<div class="metric"><b>Tingkat konversi:</b> ${konversi.toFixed(2)}%</div>
+<div class="metric"><b>Status analisis:</b> ${status}</div>
+<div class="metric"><b>Jumlah penjualan:</b> ${jual.toLocaleString('id-ID')}</div>
+<small>Hasil ini merupakan estimasi, bukan jaminan pendapatan atau keberhasilan penjualan.</small>
+`;
+document.getElementById('hasil').style.display='block';
 }
 </script>
 </body>

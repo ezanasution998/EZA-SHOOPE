@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Affiliate Product Analyst Shopee</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+}
+.container {
+  max-width: 750px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+}
+h1 { color: #ee4d2d; }
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0 15px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+button {
+  background: #ee4d2d;
+  color: white;
+  padding: 13px;
+  border: none;
+  border-radius: 6px;
+  width: 100%;
+  cursor: pointer;
+  font-size: 16px;
+}
+#hasil {
+  margin-top: 20px;
+  padding: 15px;
+  background: #fff3ef;
+  border-radius: 8px;
+  display: none;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>AI Affiliate Product Analyst</h1>
+<p>Analisis peluang produk Shopee Affiliate Anda.</p>
+
+<label>Nama Produk</label>
+<input id="produk" placeholder="Masukkan nama produk">
+
+<label>Harga Produk (Rp)</label>
+<input id="harga" type="number" placeholder="Contoh: 100000">
+
+<label>Komisi Affiliate (%)</label>
+<input id="komisi" type="number" placeholder="Contoh: 10">
+
+<label>Jumlah Klik</label>
+<input id="klik" type="number" placeholder="Contoh: 500">
+
+<label>Jumlah Penjualan</label>
+<input id="penjualan" type="number" placeholder="Contoh: 25">
+
+<button onclick="analisis()">ANALISIS PRODUK</button>
+
+<div id="hasil"></div>
+</div>
+
+<script>
+function analisis() {
+  const produk = document.getElementById("produk").value;
+  const harga = Number(document.getElementById("harga").value);
+  const komisi = Number(document.getElementById("komisi").value);
+  const klik = Number(document.getElementById("klik").value);
+  const penjualan = Number(document.getElementById("penjualan").value);
+
+  if (!produk || harga <= 0 || komisi < 0 ||
+      komisi > 100 || klik <= 0 || penjualan < 0) {
+    alert("Mohon isi data dengan benar.");
+    return;
+  }
+
+  const konversi = penjualan / klik * 100;
+  const pendapatan = harga * komisi / 100 * penjualan;
+
+  document.getElementById("hasil").style.display = "block";
+  document.getElementById("hasil").innerHTML = `
+    <h3>Hasil Analisis Produk</h3>
+    <p><b>Produk:</b> ${produk.replace(/[&<>"']/g, "")}</p>
+    <p><b>Tingkat Konversi:</b> ${konversi.toFixed(2)}%</p>
+    <p><b>Estimasi Komisi:</b> Rp ${pendapatan.toLocaleString("id-ID")}</p>
+    <p><b>Kesimpulan:</b> ${
+      konversi >= 5 ? "Performa penjualan cukup baik."
+      : konversi >= 2 ? "Performa perlu ditingkatkan."
+      : "Perlu evaluasi strategi promosi."
+    }</p>
+    <small>Perhitungan estimasi berdasarkan data yang dimasukkan, bukan data langsung Shopee.</small>
+  `;
+}
+</script>
+</body>
+</html>
